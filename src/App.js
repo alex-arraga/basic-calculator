@@ -26,11 +26,37 @@ function App() {
   };
 
   onkeydown = eventKey => {
-    const key = Number(eventKey.key)
-    if (key >= 0 && key <= 9) {
-      setValorPantalla(valorPantalla + eventKey.key)
-    } else alert("Anda igual")
+    const tecla = eventKey.key
+    const validarNum = Number(eventKey.key) >= 0 && Number(eventKey.key) <= 9;
+    if (validarNum) {
+      setValorPantalla(valorPantalla + tecla)
+    } else if (tecla) {
+      switch (tecla) {
+        case '(':
+        case ')':
+        case '/':
+        case '*':
+        case '+':
+        case '-':
+        case '.':
+        case '%':
+        case '^':
+          setValorPantalla(valorPantalla + tecla);
+          break;
+        case 'Enter':
+          calcularResultado()
+          break;
+        default:
+          break;
+      }
+    }
   }
+
+
+
+
+
+  // onkeydown = eventKey => console.log(eventKey)
 
   return (
     <div className="App">
@@ -70,3 +96,7 @@ function App() {
 }
 
 export default App;
+
+// Comprobar info teclas:
+
+// onkeydown = eventKey => console.log(eventKey)
