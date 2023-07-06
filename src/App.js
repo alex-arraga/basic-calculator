@@ -6,9 +6,6 @@ import './StyleSheets/Pantalla.css';
 import { useState } from "react";
 import { evaluate } from "mathjs";
 
-// Dentro de la función, se verifica si 'tecla' está dentro del rango numérico de los caracteres en el teclado. El rango de los caracteres numéricos va desde 48 (correspondiente al 0) hasta 57 (correspondiente al 9). La condición 'tecla >= 48 && tecla <= 57' verifica si la tecla presionada corresponde a un número válido.
-
-
 function App() {
 
   const [valorPantalla, setValorPantalla] = useState('')
@@ -52,12 +49,6 @@ function App() {
     }
   }
 
-
-
-
-
-  // onkeydown = eventKey => console.log(eventKey)
-
   return (
     <div className="App">
       <div className='calculadora'>
@@ -98,5 +89,4 @@ function App() {
 export default App;
 
 // Comprobar info teclas:
-
 // onkeydown = eventKey => console.log(eventKey)
