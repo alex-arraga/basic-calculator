@@ -6,9 +6,8 @@ import './StyleSheets/Pantalla.css';
 import { useState } from "react";
 import { evaluate } from "mathjs";
 
-// La funcion del '=' esta dicha en su Componente 'Boton'
+// Dentro de la función, se verifica si 'tecla' está dentro del rango numérico de los caracteres en el teclado. El rango de los caracteres numéricos va desde 48 (correspondiente al 0) hasta 57 (correspondiente al 9). La condición 'tecla >= 48 && tecla <= 57' verifica si la tecla presionada corresponde a un número válido.
 
-// Puedo asignar el condicional 'valorPantalla' debido a que en programación hay elementos que por defecto son Falsy y otros Truthy... Una cadena de caracteres vacia por defecto es falsa, y si tiene caracteres dentro es verdadera... Esto soluciona el problema de si le damos igual antes de tocar un numero salga 'undefined'
 
 function App() {
 
@@ -16,51 +15,54 @@ function App() {
 
   const mostrar = valor => {
     setValorPantalla(valorPantalla + valor)
-  }
+  };
 
-  const teclado = tecla => {
-    console.log(`Se presiono la tecla: ${tecla}`)
-  }
-
-  const calcularResultado = () => {
+  const calcularResultado = () => {   // Solucion problema undefined presionando '='
     if (valorPantalla) {
       setValorPantalla(evaluate(valorPantalla))
     } else {
       alert("Por favor ingrese valores validos")
     }
+  };
+
+  onkeydown = eventKey => {
+    const key = Number(eventKey.key)
+    if (key >= 0 && key <= 9) {
+      setValorPantalla(valorPantalla + eventKey.key)
+    } else alert("Anda igual")
   }
 
   return (
     <div className="App">
       <div className='calculadora'>
-        <Pantalla input={valorPantalla} />
+        <Pantalla input={valorPantalla} funcionTecla={onkeydown} />
         <div className='filas'>
-          <Boton accion={mostrar} accionTeclado={teclado}>7</Boton>
-          <Boton accion={mostrar} accionTeclado={teclado}>8</Boton>
-          <Boton accion={mostrar}>9</Boton>
-          <Boton accion={mostrar}>DEL</Boton>
-          <Boton accion={() => setValorPantalla('')}>AC</Boton>
+          <Boton accionClick={mostrar}>7</Boton>
+          <Boton accionClick={mostrar}>8</Boton>
+          <Boton accionClick={mostrar}>9</Boton>
+          <Boton accionClick={mostrar}>DEL</Boton>
+          <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
         </div>
         <div className='filas'>
-          <Boton accion={mostrar}>4</Boton>
-          <Boton accion={mostrar}>5</Boton>
-          <Boton accion={mostrar}>6</Boton>
-          <Boton accion={mostrar}>*</Boton>
-          <Boton accion={mostrar}>/</Boton>
+          <Boton accionClick={mostrar}>4</Boton>
+          <Boton accionClick={mostrar}>5</Boton>
+          <Boton accionClick={mostrar}>6</Boton>
+          <Boton accionClick={mostrar}>*</Boton>
+          <Boton accionClick={mostrar}>/</Boton>
         </div>
         <div className='filas'>
-          <Boton accion={mostrar}>1</Boton>
-          <Boton accion={mostrar}>2</Boton>
-          <Boton accion={mostrar}>3</Boton>
-          <Boton accion={mostrar}>+</Boton>
-          <Boton accion={mostrar}>-</Boton>
+          <Boton accionClick={mostrar}>1</Boton>
+          <Boton accionClick={mostrar}>2</Boton>
+          <Boton accionClick={mostrar}>3</Boton>
+          <Boton accionClick={mostrar}>+</Boton>
+          <Boton accionClick={mostrar}>-</Boton>
         </div>
         <div className='filas'>
-          <Boton accion={mostrar}>.</Boton>
-          <Boton accion={mostrar}>0</Boton>
-          <Boton accion={mostrar}>^</Boton>
-          <Boton accion={mostrar}>ANS</Boton>
-          <Boton accion={calcularResultado}>=</Boton>
+          <Boton accionClick={mostrar}>.</Boton>
+          <Boton accionClick={mostrar}>0</Boton>
+          <Boton accionClick={mostrar}>^</Boton>
+          <Boton accionClick={mostrar}>ANS</Boton>
+          <Boton accionClick={calcularResultado}>=</Boton>
         </div>
       </div>
     </div>

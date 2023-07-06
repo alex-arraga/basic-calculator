@@ -1,12 +1,14 @@
 import React from "react";
 
-// En esta ocasion vamos a ver otra manera de definir un Componente, que es usando una función flecha, en vez de una 'function'
-
-const Pantalla = ({ input }) => {
+const Pantalla = ({ input, funcionTecla }) => {
     return (
-        <div className="pantalla">
-            {input}
-        </div>
+        <input className="pantalla"
+            placeholder="0"
+            type="text"
+            onKeyDown={funcionTecla}
+            readOnly
+            value={input}>
+        </input>
     )
 }
 
