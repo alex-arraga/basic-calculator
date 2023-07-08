@@ -6,23 +6,36 @@ import './StyleSheets/Pantalla.css';
 import { useState } from "react";
 import { evaluate } from "mathjs";
 
+// Slice(0, -1): Toma una cadena de caracteres y la corta. El primer parametro es 'start', el indice, en este caso decimos que tome todos los caracteres de la cadena, desde el indice 0, es decir, desde el principio. Y -1 quiere decir que vamos a reemplazar el ultimo valor de la cadena, en este caso lo reemplazamos por 'valor'
+
 function App() {
 
   const [valorPantalla, setValorPantalla] = useState('')
 
   const mostrar = valor => {
-    setValorPantalla(valorPantalla + valor)
-  };
+    const ultimosDosCaracteres = valorPantalla.slice(-2);
+    const operadores = /[+\-*^%/]/;
 
-  const calcularResultado = () => {   // Solucion problema undefined presionando '='
-    if (valorPantalla) {
-      setValorPantalla(evaluate(valorPantalla))
+    if (operadores.test(ultimosDosCaracteres) && operadores.test(valor)) {
+      setValorPantalla(valorPantalla.slice(0, -1) + valor);
     } else {
-      alert("Por favor ingrese valores validos")
+      setValorPantalla(valorPantalla + valor);
     }
   };
 
-  onkeydown = eventKey => {
+
+
+  const calcularResultado = () => {
+    if (valorPantalla) {    // Si el input no es un string vacio
+      setValorPantalla(evaluate(valorPantalla))
+    } else {
+      alert("Ingrese una expresion valida")
+    }
+  }
+
+
+
+    onkeydown = eventKey => {
     const tecla = eventKey.key
     const validarNum = Number(eventKey.key) >= 0 && Number(eventKey.key) <= 9;
     if (validarNum) {
@@ -38,7 +51,7 @@ function App() {
         case '.':
         case '%':
         case '^':
-          setValorPantalla(valorPantalla + tecla);
+          mostrar(tecla)
           break;
         case 'Enter':
           calcularResultado()
@@ -49,10 +62,11 @@ function App() {
     }
   }
 
+  
   return (
     <div className="App">
       <div className='calculadora'>
-        <Pantalla input={valorPantalla} funcionTecla={onkeydown} />
+        <Pantalla input={valorPantalla} />
         <div className='filas'>
           <Boton accionClick={mostrar}>7</Boton>
           <Boton accionClick={mostrar}>8</Boton>

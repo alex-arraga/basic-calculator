@@ -1,11 +1,10 @@
 import React from "react";
 
-const Pantalla = ({ input, funcionTecla }) => {
+const Pantalla = ({ input }) => {
     return (
         <input className="pantalla"
             placeholder="0"
             type="text"
-            onKeyDown={funcionTecla}
             readOnly
             value={input}>
         </input>
