@@ -4,70 +4,81 @@ import './StyleSheets/Botones.css';
 import Pantalla from './Components/Pantalla';
 import './StyleSheets/Pantalla.css';
 import { useState } from "react";
-import { evaluate, re } from "mathjs";
+import { evaluate } from "mathjs";
 
-// Slice(0, -1): Toma una cadena de caracteres y la corta. El primer parametro es 'start', el indice, en este caso decimos que tome todos los caracteres de la cadena, desde el indice 0, es decir, desde el principio. Y -1 quiere decir que vamos a reemplazar el ultimo valor de la cadena, en este caso lo reemplazamos por 'valor'
 
 function App() {
-
+  // Hook
   const [valorPantalla, setValorPantalla] = useState('')
 
+  // Constantes
+  const ultimoCaracter = valorPantalla.slice(-1);
+  const operadores = /[+\-*^%/]/;
+  const terminaEnOperador = operadores.test(ultimoCaracter);
+
   const mostrar = valor => {
-    
-    // Creo E.R y guardo los ultimos 2 caracteres del input en una variable
-    const ultimosDosCaracteres = valorPantalla.slice(-2);
-    const operadores = /[+\-*^%/]/;
+    const valorIngresadoOperador = operadores.test(valor);
 
-    // Si el valor de pantalla es un string, si los ultimo caracter es un operador(+-*/%) y si el nuevo valor que se quiere ingresar tambien es un operador
-    if (typeof valorPantalla === "string" && operadores.test(ultimosDosCaracteres) && operadores.test(valor)) {
+    if (typeof valorPantalla === "string") {
 
-      // Elimina el ultimo operador y lo reemplaza por el nuevo valor ingresado(Solo si es un String)
-      setValorPantalla(valorPantalla.slice(0, -1) + valor);
-    } else {
+      // El ultimo caracter es Operador y se quiere ingresar otro Operador
+      if (terminaEnOperador && valorIngresadoOperador) {
+        setValorPantalla(valorPantalla.slice(0, -1) + valor);
+      }
 
-      // Si el ultimo valor no es un operador, se agrega este valor al final
-      setValorPantalla(valorPantalla + valor);
+      // Si el ultimo valor no es un operador, es un numero y este se agrega este valor al final
+      else {
+        setValorPantalla(valorPantalla + valor);
+      }
     }
-  };
-
+  }
 
 
   const calcularResultado = () => {
 
     // Si el input no es un string vacio
     if (valorPantalla) {
+      // Array vacio donde se almacenaran operaciones y resultados en Objetos, c/u tendrá un id
+      const arr = []
+      const nId = 0;
 
-      // Calcula la operacion en pantalla
-      const nuevoResultado = evaluate(valorPantalla);
+      // Si no termina en operador
+      if (!terminaEnOperador) {
+        
+          // Calcula la operacion en pantalla
+          const resultado = evaluate(valorPantalla);
+          const resultadoString = resultado.toString()
 
-      // Reconvierte la operacion a String para poder seguir haciendo operaciones sin que de error slice()
-      const resultadoString = nuevoResultado.toString();
+          // Muestra el resultado de la operacion convertido a String para no tener problemas con slice()
+          setValorPantalla(resultadoString);
 
-      // Muestra el resultado de la operacion
-      setValorPantalla(resultadoString);
+          // Defino el objeto donde se almacenan las operaciones con sus resultados
+          let objetoResultado = {
+            "id": nId,
+            "operacion": valorPantalla,
+            "resultado": resultadoString
+          }
 
-      // Creo un array vacio donde se almacenaran las operaciones y resultados en Objetos, cada objeto tendra un id unico
-      let arr = []
-      let nId = 0;
+          // Almaceno el objeto de cada operacion en el array
+          arr.push(objetoResultado)
 
-      // Defino el objeto donde se almacenan las operaciones con sus resultados
-      let objetoResultado = {
-        "id": nId,
-        "operacion": valorPantalla,
-        "resultado": resultadoString
+          // Muestro los Objetos en consola
+          console.log(objetoResultado);
+        } 
+
+        // Si termina en operador
+      else {
+        setValorPantalla(`Error`)     
       }
 
-      // Empujo/Almaceno el objeto de cada operacion en el array
-      arr.push(objetoResultado)
-
-      // Muestro los Objetos en consola
-      console.log(objetoResultado);
-
+      // Si la pantalla es un string vacio
     } else {
-      alert("Ingrese una expresion valida")
+      alert("Ingrese una expresion")  
     }
   }
 
+  // Validaciones a realizar: Si empieza con . o ()
+  // !parentesis.test(valorPantalla)
 
 
   onkeydown = eventKey => {
