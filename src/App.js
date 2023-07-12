@@ -12,74 +12,94 @@ function App() {
   const [valorPantalla, setValorPantalla] = useState('')
 
   // Constantes
-  const ultimoCaracter = valorPantalla.slice(-1);
   const operadores = /[+\-*^%/]/;
+  const parentesisVacios = /\(\)|[\(\)]/;
+  const expresionValida = /^[0-9+\-*^%/]+$/.test(valorPantalla);
+  const punto = /[.]/;
+
+  const ultimoCaracter = valorPantalla.slice(-1);
+  const expresionDentroParentesis = parentesisVacios.test(valorPantalla.slice(1, -1));
+  const contieneParentesisVacios = parentesisVacios.test(valorPantalla);
   const terminaEnOperador = operadores.test(ultimoCaracter);
+  const terminaEnPunto = punto.test(ultimoCaracter);
 
   const mostrar = valor => {
     const valorIngresadoOperador = operadores.test(valor);
 
     if (typeof valorPantalla === "string") {
 
-      // El ultimo caracter es Operador y se quiere ingresar otro Operador
+      // Si el ultimo caracter es Operador y se quiere ingresar otro Operador
       if (terminaEnOperador && valorIngresadoOperador) {
+
+        // Se eliminar el ultimo caracter (operador) y se lo reemplaza por el nuevo
         setValorPantalla(valorPantalla.slice(0, -1) + valor);
       }
 
-      // Si el ultimo valor no es un operador, es un numero y este se agrega este valor al final
+      // Si el ultimo valor no es un operador, este se agrega este valor al final
       else {
         setValorPantalla(valorPantalla + valor);
       }
     }
-  }
+  };
 
 
   const calcularResultado = () => {
 
-    // Si el input no es un string vacio
-    if (valorPantalla) {
-      // Array vacio donde se almacenaran operaciones y resultados en Objetos, c/u tendrá un id
-      const arr = []
-      const nId = 0;
+    // Array vacio donde se almacenaran operaciones y resultados en Objetos, c/u tendrá un id
+    const arr = [];
+    const nId = 0;
 
-      // Si no termina en operador
-      if (!terminaEnOperador) {
-        
+    // Validaciones: 
+    // 1- Si el input contiene caracteres (o si NO es un string vacio). ej: evita error '' -> calcular
+    // 2- O Si la expresion es una expresion entre parentesis. ej: Evita error '2*(3+5)' -> calcular
+    // 3- Si la expresion es valida. ej: Evita error '(9) -> calcular'
+    // 4- Y si ademas no hay parentesis vacios. ej: Evita error '( o ()' -> calcular
+
+    if (valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios) {
+
+      // 5- Si no termina en operador. ej: Evita error '2-3+' o '3*' -> calcular
+      // 6- Y si no termina en punto. ej: Evita error '.' -> calcular
+
+      if (!terminaEnOperador && !terminaEnPunto) {
+
+        // ¿Para qué uso try/catch? Try ejecutará una operación valida. Y si no lo es, por ej: '()()()+2', catch manejará este error o esta operacion matematica invalida y mostrará en pantalla 'Error'
+
+        try {
           // Calcula la operacion en pantalla
           const resultado = evaluate(valorPantalla);
-          const resultadoString = resultado.toString()
+          const resultadoString = resultado.toString();
 
-          // Muestra el resultado de la operacion convertido a String para no tener problemas con slice()
+          // Muestra el resultado convertido a String. Evita error con slice(), ya que Math.js devuelve el resultado convertido a 'Number' y slice() solo analiza strings
           setValorPantalla(resultadoString);
 
-          // Defino el objeto donde se almacenan las operaciones con sus resultados
-          let objetoResultado = {
+          // Defino el objeto donde se almacenan las operaciones y sus resultados
+          let objetoOperaciones = {
             "id": nId,
             "operacion": valorPantalla,
             "resultado": resultadoString
-          }
+          };
 
           // Almaceno el objeto de cada operacion en el array
-          arr.push(objetoResultado)
+          arr.push(objetoOperaciones)
 
           // Muestro los Objetos en consola
-          console.log(objetoResultado);
-        } 
-
-        // Si termina en operador
-      else {
-        setValorPantalla(`Error`)     
+          console.log(objetoOperaciones);
+        } catch {
+          setValorPantalla('Error');
+          alert("Expresión no válida");
+        }
       }
 
-      // Si la pantalla es un string vacio
+      // Si la expresion termina en operador. ej: '2+'
+      else {
+        setValorPantalla('Error')
+      }
+
+      // Si la pantalla es un string vacio y se calcula
     } else {
-      alert("Ingrese una expresion")  
+      alert("Ingrese una expresión")
     }
-  }
-
-  // Validaciones a realizar: Si empieza con . o ()
-  // !parentesis.test(valorPantalla)
-
+  };
 
   onkeydown = eventKey => {
     const tecla = eventKey.key
@@ -106,7 +126,7 @@ function App() {
           break;
       }
     }
-  }
+  };
 
 
   return (
@@ -143,8 +163,8 @@ function App() {
         </div>
       </div>
     </div>
-  );
-}
+  )
+};
 
 export default App;
 
