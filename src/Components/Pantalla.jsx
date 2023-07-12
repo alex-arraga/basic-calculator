@@ -11,4 +11,4 @@ const Pantalla = ({ input }) => {
     )
 }
 
-export default Pantalla
+export default Pantalla;

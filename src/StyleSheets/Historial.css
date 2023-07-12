@@ -1,0 +1,63 @@
+.contenedor-historial {
+    min-width: 330px;
+    min-height: 100vh;
+    background-color: rgb(45, 114, 91);
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: start;
+}
+
+.registro-titulo {
+    text-align: center;
+    background-color: rgb(0, 70, 114);
+    position: relative;
+    left: auto;
+    margin: 25px 0;
+}
+
+.registro-estructura{
+    min-height: 120px;
+    margin: 10px 10px;
+    background-color: #873287;
+    position: relative;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.registro-numero,
+.registro-expresion,
+.registro-resultado {
+    font-size: 13px;
+}
+
+.registro-expresion,
+.registro-resultado {
+    font-weight: 500;
+}
+
+.registro-opciones-contenedor {
+    background-color: #657200;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.registro-opciones-eliminar {
+    width: auto;
+}
+
+.registro-fecha{
+    font-size: 11px;
+    position: absolute;
+    right: 15px;
+}
+
+.registro-linea-divisora {
+    width: 80%;
+    height: 1.5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 15px auto;
+    border-radius: 5px;
+}
