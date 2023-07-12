@@ -1,12 +1,12 @@
 import './App.css';
-// import Boton from './Components/Botones';
-// import Pantalla from './Components/Pantalla';
+import Boton from './Components/Botones';
+import './StyleSheets/Botones.css';
+
+import Pantalla from './Components/Pantalla';
+import './StyleSheets/Pantalla.css';
+
 import Historial from './Components/Historial';
 import './StyleSheets/Historial.css';
-
-// import '../StyleSheets/Botones.css';
-// import '../StyleSheets/Pantalla.css';
-
 
 import { useState } from "react";
 import { evaluate } from "mathjs";
