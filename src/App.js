@@ -1,4 +1,5 @@
 import './App.css';
+
 import Boton from './Components/Botones';
 import './StyleSheets/Botones.css';
 
@@ -9,12 +10,13 @@ import Historial from './Components/Historial';
 import './StyleSheets/Historial.css';
 
 import { useState } from "react";
-import { evaluate } from "mathjs";
-
+import { evaluate, sum } from "mathjs";
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   // Hooks
-  const [valorPantalla, setValorPantalla] = useState('')
+  const [valorPantalla, setValorPantalla] = useState('');
+  const [historial, setHistorial] = useState([]);
 
   // RegExp: validaciones
   const operadores = /[+\-*^%/]/;
@@ -34,7 +36,7 @@ function App() {
     const valorIngresadoOperador = operadores.test(valor);
     if (typeof valorPantalla === "string") {
       if (terminaEnOperador && valorIngresadoOperador) {
-        setValorPantalla(valorPantalla.slice(0, -1) + valor);
+        setValorPantalla(valorPantalla.slice(0, -1) + valor)
       }
       else {
         setValorPantalla(valorPantalla + valor);
@@ -44,25 +46,14 @@ function App() {
 
   // Evaluar resultados
   const calcularResultado = () => {
-    const arr = [];
-    const nId = 0;
     if (valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios) {
       if (!terminaEnOperador && !terminaEnPunto) {
         try {
           const resultado = evaluate(valorPantalla);
           const resultadoString = resultado.toString();
-
           setValorPantalla(resultadoString);
-
-          let objetoOperaciones = {
-            "id": nId,
-            "operacion": valorPantalla,
-            "resultado": resultadoString
-          };
-
-          arr.push(objetoOperaciones)
-
-          console.log(objetoOperaciones);
+          // Historial
+          guardarEnHistorial(valorPantalla, resultadoString);
         } catch {
           setValorPantalla('Error');
           alert("Expresión no válida");
@@ -74,6 +65,14 @@ function App() {
     } else {
       alert("Ingrese una expresión")
     }
+  };
+
+  const guardarEnHistorial = (expresion, resultado) => {
+    const nuevoRegistro = {
+      expresion,
+      resultado
+    }
+    setHistorial([...historial, nuevoRegistro]);
   };
 
   // Keyboard
@@ -107,11 +106,16 @@ function App() {
   // Ejecuta la app
   return (
     <div className="App">
+
       <div className='historial'>
-        <Historial />
+        <Historial
+          historial={historial}
+          setHistorial={setHistorial}
+        />
       </div>
+
       <div className='calculadora'>
-        <Pantalla input={valorPantalla} />
+        <Pantalla input={valorPantalla} manejarEnvio={calcularResultado} />
         <div className='filas'>
           <Boton accionClick={mostrar}>7</Boton>
           <Boton accionClick={mostrar}>8</Boton>
