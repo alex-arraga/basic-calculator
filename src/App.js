@@ -10,13 +10,13 @@ import Historial from './Components/Historial';
 import './StyleSheets/Historial.css';
 
 import { useState } from "react";
-import { evaluate, sum } from "mathjs";
-import { v4 as uuidv4 } from 'uuid';
+import { evaluate } from "mathjs";
 
 function App() {
   // Hooks
   const [valorPantalla, setValorPantalla] = useState('');
   const [historial, setHistorial] = useState([]);
+  const [numeroOperacion, setNumeroOperacion] = useState(1);
 
   // RegExp: validaciones
   const operadores = /[+\-*^%/]/;
@@ -52,8 +52,14 @@ function App() {
           const resultado = evaluate(valorPantalla);
           const resultadoString = resultado.toString();
           setValorPantalla(resultadoString);
+
           // Historial
-          guardarEnHistorial(valorPantalla, resultadoString);
+          const sumarOperacion = () => {
+            setNumeroOperacion(() => numeroOperacion + 1)
+            return numeroOperacion
+          }
+
+          guardarEnHistorial(sumarOperacion(), valorPantalla, resultadoString);
         } catch {
           setValorPantalla('Error');
           alert("Expresión no válida");
@@ -67,8 +73,9 @@ function App() {
     }
   };
 
-  const guardarEnHistorial = (expresion, resultado) => {
+  const guardarEnHistorial = (numeroOperacion, expresion, resultado) => {
     const nuevoRegistro = {
+      numeroOperacion,
       expresion,
       resultado
     }
@@ -111,6 +118,8 @@ function App() {
         <Historial
           historial={historial}
           setHistorial={setHistorial}
+          numeroOperacion={numeroOperacion}
+          setNumeroOperacion={setNumeroOperacion}
         />
       </div>
 
@@ -153,3 +162,17 @@ export default App;
 
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
+
+
+// Funciones Historial: Hacer que funcione
+
+// const sumarNumeroOperacion = () => {
+//   let n = 1;
+//   if (calcularResultado) {
+//     for (let i = 0; i < calcularResultado.length; i++)
+//       n++
+//     return n
+//   } else {
+//     console.log("No se puede leer n o i")
+//   }
+// }
