@@ -1,8 +1,9 @@
+import { forEach } from "mathjs";
 import React from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 
-function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacion }) {
+function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacion, setValorPantalla }) {
     const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const fecha = new Date().toLocaleDateString()
 
@@ -13,11 +14,20 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
 
     // Buscar como funciona exactamente esta funcion
     const eliminarRegistro = id => {
-        const actualizarRegistro = historial.filter(registro => registro.id !== id)
+        const actualizarRegistro = historial.filter(registro => registro.id !== id);
         setHistorial(actualizarRegistro);
     };
 
-    // Recorre y define cada registro
+    const recuperarResultado = res => {
+        setValorPantalla(() => res)
+    };
+
+    const recuperarExpresion = exp => {
+        setValorPantalla(() => exp)
+    };
+
+
+    // Crea cada registro
     historial.map(registro => (
         <div key={registro.id = uuidv4()}>
             <p>{registro.numeroOperacion}</p>
@@ -33,8 +43,9 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
                     <h2 className="registro-titulo">Registro de operaciones</h2>
                 </div>
                 <button className="registro-reiniciar" onClick={() => reiniciarRegistro()}>Borrar Historial</button>
+
                 {historial.map((registro) => (
-                    <div className="registro-estructura" key={registro.id}>
+                    <div className="registro-estructura" key={registro.id} >
                         <div className="registro-opciones-contenedor">
                             <p className="registro-fecha">{fecha}</p>
                             <AiOutlineCloseCircle className="registro-opciones-eliminar" onClick={() => eliminarRegistro(registro.id)} />
@@ -42,8 +53,8 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
                         <hr className="registro-divisor" />
                         <p className="registro-hora">{hora}</p>
                         <h4 className="registro-numero">N° {registro.numeroOperacion}</h4>
-                        <p className="registro-expresion"><span>Exp:</span> {registro.expresion} </p>
-                        <p className="registro-resultado"><span>Res:</span> {registro.resultado}</p>
+                        <p className="registro-expresion" onClick={() => recuperarExpresion(registro.expresion)}><span>Exp:</span> {registro.expresion} </p>
+                        <p className="registro-resultado" onClick={() => recuperarResultado(registro.resultado)}><span>Res:</span> {registro.resultado}</p>
                     </div>
                 ))}
             </div>

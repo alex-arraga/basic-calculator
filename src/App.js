@@ -17,6 +17,7 @@ function App() {
   const [valorPantalla, setValorPantalla] = useState('');
   const [historial, setHistorial] = useState([]);
   const [numeroOperacion, setNumeroOperacion] = useState(1);
+  const [ultimoResultado, setUltimoResultado] = useState([])
 
   // RegExp: validaciones
   const operadores = /[+\-*^%/]/;
@@ -52,12 +53,13 @@ function App() {
           const resultado = evaluate(valorPantalla);
           const resultadoString = resultado.toString();
           setValorPantalla(resultadoString);
+          setUltimoResultado(resultadoString);
 
           // Historial
           const sumarOperacion = () => {
             setNumeroOperacion(() => numeroOperacion + 1)
             return numeroOperacion
-          }
+          };
 
           guardarEnHistorial(sumarOperacion(), valorPantalla, resultadoString);
         } catch {
@@ -73,6 +75,11 @@ function App() {
     }
   };
 
+  const borrarUnValor = () => {
+    setValorPantalla(() => valorPantalla.slice(0, -1))
+  }
+
+  // Historial
   const guardarEnHistorial = (numeroOperacion, expresion, resultado) => {
     const nuevoRegistro = {
       numeroOperacion,
@@ -81,6 +88,9 @@ function App() {
     }
     setHistorial([...historial, nuevoRegistro]);
   };
+
+  
+
 
   // Keyboard
   onkeydown = eventKey => {
@@ -104,6 +114,9 @@ function App() {
         case 'Enter':
           calcularResultado()
           break;
+        case 'Backspace':
+          borrarUnValor()
+          break;
         default:
           break;
       }
@@ -120,6 +133,7 @@ function App() {
           setHistorial={setHistorial}
           numeroOperacion={numeroOperacion}
           setNumeroOperacion={setNumeroOperacion}
+          setValorPantalla={setValorPantalla}
         />
       </div>
 
@@ -129,7 +143,7 @@ function App() {
           <Boton accionClick={mostrar}>7</Boton>
           <Boton accionClick={mostrar}>8</Boton>
           <Boton accionClick={mostrar}>9</Boton>
-          <Boton accionClick={mostrar}>DEL</Boton>
+          <Boton accionClick={borrarUnValor}>DEL</Boton>
           <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
         </div>
         <div className='filas'>
@@ -150,7 +164,7 @@ function App() {
           <Boton accionClick={mostrar}>.</Boton>
           <Boton accionClick={mostrar}>0</Boton>
           <Boton accionClick={mostrar}>^</Boton>
-          <Boton accionClick={mostrar}>ANS</Boton>
+          <Boton accionClick={() => setValorPantalla(ultimoResultado)}>ANS</Boton>
           <Boton accionClick={calcularResultado}>=</Boton>
         </div>
       </div>
@@ -162,17 +176,3 @@ export default App;
 
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
-
-
-// Funciones Historial: Hacer que funcione
-
-// const sumarNumeroOperacion = () => {
-//   let n = 1;
-//   if (calcularResultado) {
-//     for (let i = 0; i < calcularResultado.length; i++)
-//       n++
-//     return n
-//   } else {
-//     console.log("No se puede leer n o i")
-//   }
-// }
