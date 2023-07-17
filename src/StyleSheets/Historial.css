@@ -91,6 +91,14 @@
     color: #fff
 }
 
+.registro-expresion span:hover,
+.registro-resultado span:hover {
+    cursor: pointer;
+    transition: .4s;
+    text-decoration: underline;
+    color: rgb(126, 246, 236);
+}
+
 .registro-opciones-contenedor {
     display: flex;
     justify-content: space-between;

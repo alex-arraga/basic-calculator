@@ -1,4 +1,3 @@
-import { forEach } from "mathjs";
 import React from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
@@ -25,7 +24,6 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
     const recuperarExpresion = exp => {
         setValorPantalla(() => exp)
     };
-
 
     // Crea cada registro
     historial.map(registro => (

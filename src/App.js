@@ -20,7 +20,7 @@ function App() {
   const [ultimoResultado, setUltimoResultado] = useState([])
 
   // RegExp: validaciones
-  const operadores = /[+\-*^%/]/;
+  const operadores = /[+\-%^*/÷x]/;
   const parentesisVacios = /\(\)|[\(\)]/;
   const expresionValida = /^[0-9+\-*^%/]+$/.test(valorPantalla);
   const punto = /[.]/;
@@ -38,30 +38,43 @@ function App() {
     if (typeof valorPantalla === "string") {
       if (terminaEnOperador && valorIngresadoOperador) {
         setValorPantalla(valorPantalla.slice(0, -1) + valor)
-      }
-      else {
+      } else {
         setValorPantalla(valorPantalla + valor);
       }
     }
   };
 
+  // Convierte simbolos especiales a operadores legibles por 'Math.js'
+  const expresionConvertida = () => {
+    let valorConvertido = valorPantalla;
+    valorConvertido = valorConvertido.replace(/x/g, '*');
+    valorConvertido = valorConvertido.replace(/÷/g, '/');
+    return valorConvertido;
+  };
+
   // Evaluar resultados
   const calcularResultado = () => {
+    // Si la pantalla no esta vacia, o hay una expresion dentro de parentesis, y es una expresion valida o con caracteres especiales
     if (valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios) {
       if (!terminaEnOperador && !terminaEnPunto) {
-        try {
-          const resultado = evaluate(valorPantalla);
+        try {         
+          // Evaluo la expresion y lo convierto a String
+          const resultado = evaluate(expresionConvertida());     
           const resultadoString = resultado.toString();
-          setValorPantalla(resultadoString);
+
+          // Muestro el resultado de la expresion
           setUltimoResultado(resultadoString);
+          setValorPantalla(resultadoString);
 
           // Historial
-          const sumarOperacion = () => {
+          // Suma 1 a N°
+          const nOperacion = () => {
             setNumeroOperacion(() => numeroOperacion + 1)
             return numeroOperacion
           };
 
-          guardarEnHistorial(sumarOperacion(), valorPantalla, resultadoString);
+          // Pasa argumentos al objeto 'nuevoRegistro' 
+          guardarEnHistorial(nOperacion(), valorPantalla, resultadoString);
         } catch {
           setValorPantalla('Error');
           alert("Expresión no válida");
@@ -75,22 +88,27 @@ function App() {
     }
   };
 
+
+  // Teclas especiales 'Backspace' y 'r'
   const borrarUnValor = () => {
     setValorPantalla(() => valorPantalla.slice(0, -1))
   }
 
-  // Historial
+  // Ultimo Resultado
+  const recuperarUltimoResultado = () => {
+    setValorPantalla(valorPantalla + ultimoResultado)
+  };
+
+  // Almacena una lista de objetos como registros en Historial
   const guardarEnHistorial = (numeroOperacion, expresion, resultado) => {
     const nuevoRegistro = {
       numeroOperacion,
       expresion,
       resultado
     }
+    // Recorre el array 'historial' y añade un nuevo registro al final
     setHistorial([...historial, nuevoRegistro]);
   };
-
-  
-
 
   // Keyboard
   onkeydown = eventKey => {
@@ -101,21 +119,29 @@ function App() {
     } else if (tecla) {
       switch (tecla) {
         case '(':
-        case ')':
-        case '/':
-        case '*':
+        case ')': 
         case '+':
         case '-':
         case '.':
         case '%':
         case '^':
           mostrar(tecla)
+        break;
+        case '*':
+          mostrar(tecla.replace(/\*/g, 'x'));
+          break;
+        case '/':
+          mostrar(tecla.replace(/\//g, '÷'));
           break;
         case 'Enter':
           calcularResultado()
           break;
         case 'Backspace':
           borrarUnValor()
+          break;
+        case 'r':
+        case 'R':
+          recuperarUltimoResultado()
           break;
         default:
           break;
@@ -150,8 +176,8 @@ function App() {
           <Boton accionClick={mostrar}>4</Boton>
           <Boton accionClick={mostrar}>5</Boton>
           <Boton accionClick={mostrar}>6</Boton>
-          <Boton accionClick={mostrar}>*</Boton>
-          <Boton accionClick={mostrar}>/</Boton>
+          <Boton accionClick={mostrar}>x</Boton>
+          <Boton accionClick={mostrar}>÷</Boton>
         </div>
         <div className='filas'>
           <Boton accionClick={mostrar}>1</Boton>
@@ -163,8 +189,8 @@ function App() {
         <div className='filas'>
           <Boton accionClick={mostrar}>.</Boton>
           <Boton accionClick={mostrar}>0</Boton>
-          <Boton accionClick={mostrar}>^</Boton>
-          <Boton accionClick={() => setValorPantalla(ultimoResultado)}>ANS</Boton>
+          <Boton accionClick={mostrar}>xⁿ</Boton>
+          <Boton accionClick={recuperarUltimoResultado}>ANS</Boton>
           <Boton accionClick={calcularResultado}>=</Boton>
         </div>
       </div>
@@ -176,3 +202,17 @@ export default App;
 
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
+
+
+
+// const convertirASimbolo = () => {
+//   let valorConvertido = convertirAOperador();
+  
+//   valorConvertido = valorConvertido.replace(/\*/g, 'x');
+//   valorConvertido = valorConvertido.replace(/\//g, '÷');
+//   valorConvertido = valorConvertido.replace(/\^/g, 'xⁿ');
+  
+//   return valorConvertido;
+// };
+
+// const simboloPotencia = /xⁿ/;  
