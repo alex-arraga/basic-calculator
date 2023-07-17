@@ -20,7 +20,7 @@ function App() {
   const [ultimoResultado, setUltimoResultado] = useState([])
 
   // RegExp: validaciones
-  const operadores = /[+\-%^*/÷x]/;
+  const operadores = /[+\-%^*/]/;
   const parentesisVacios = /\(\)|[\(\)]/;
   const expresionValida = /^[0-9+\-*^%/]+$/.test(valorPantalla);
   const punto = /[.]/;
@@ -36,8 +36,12 @@ function App() {
   const mostrar = valor => {
     const valorIngresadoOperador = operadores.test(valor);
     if (typeof valorPantalla === "string") {
-      if (terminaEnOperador && valorIngresadoOperador) {
-        setValorPantalla(valorPantalla.slice(0, -1) + valor)
+      if (valor === "xⁿ") {
+        if (!terminaEnOperador || !valorPantalla.endsWith("^")) {
+          setValorPantalla(valorPantalla + "^");
+        }
+      } else if (terminaEnOperador && valorIngresadoOperador) {
+        setValorPantalla(valorPantalla.slice(0, -1) + valor);
       } else {
         setValorPantalla(valorPantalla + valor);
       }
@@ -55,11 +59,11 @@ function App() {
   // Evaluar resultados
   const calcularResultado = () => {
     // Si la pantalla no esta vacia, o hay una expresion dentro de parentesis, y es una expresion valida o con caracteres especiales
-    if (valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios) {
+    if ((valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios))
       if (!terminaEnOperador && !terminaEnPunto) {
-        try {         
+        try {
           // Evaluo la expresion y lo convierto a String
-          const resultado = evaluate(expresionConvertida());     
+          const resultado = evaluate(expresionConvertida());
           const resultadoString = resultado.toString();
 
           // Muestro el resultado de la expresion
@@ -83,11 +87,10 @@ function App() {
       else {
         setValorPantalla('Error')
       }
-    } else {
+    else {
       alert("Ingrese una expresión")
     }
   };
-
 
   // Teclas especiales 'Backspace' y 'r'
   const borrarUnValor = () => {
@@ -119,14 +122,14 @@ function App() {
     } else if (tecla) {
       switch (tecla) {
         case '(':
-        case ')': 
+        case ')':
         case '+':
         case '-':
         case '.':
         case '%':
         case '^':
           mostrar(tecla)
-        break;
+          break;
         case '*':
           mostrar(tecla.replace(/\*/g, 'x'));
           break;
@@ -202,17 +205,3 @@ export default App;
 
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
-
-
-
-// const convertirASimbolo = () => {
-//   let valorConvertido = convertirAOperador();
-  
-//   valorConvertido = valorConvertido.replace(/\*/g, 'x');
-//   valorConvertido = valorConvertido.replace(/\//g, '÷');
-//   valorConvertido = valorConvertido.replace(/\^/g, 'xⁿ');
-  
-//   return valorConvertido;
-// };
-
-// const simboloPotencia = /xⁿ/;  
