@@ -1,9 +1,9 @@
 import React from "react";
+import '../StyleSheets/Pantalla.css';
 
 const Pantalla = ({ input }) => {
-
+    // Evita que se vuelva a enviar el formulario en caso de un error
     const manejarEnvio = e => {
-        // Evita que se vuelva a enviar el formulario en caso de un error
         e.preventDefault();
     };
 

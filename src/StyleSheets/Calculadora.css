@@ -1,0 +1,22 @@
+.calculadora {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 670px;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 20px;
+}
+
+.filas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px 25px;
+}
+
+.img-raiz {
+    filter: invert(90%);
+    width: 30px;
+}

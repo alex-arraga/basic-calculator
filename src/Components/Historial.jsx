@@ -1,4 +1,5 @@
 import React from "react";
+import '../StyleSheets/Historial.css';
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 

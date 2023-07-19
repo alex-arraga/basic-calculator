@@ -4,16 +4,16 @@
     align-items: center;
     padding: 0 10px;
     height: 80px;
-    width: 435px;
-    background-color: rgb(10, 10, 10);
+    width: 380px;
+    background-color: #0a0a0a;
+    border: 2px solid rgb(60, 60, 60);
     border-radius: 10px;
-    border: 2px solid #7b7b7b;
     margin: 30px 25px;
-    font-size: 2.8em;
+    font-size: 2.7em;
+    /* letter-spacing: 0.2px; Ver que onda esta propiedad*/
     color: #ffffff;
     overflow: overlay;
     letter-spacing: 1px;
     font-weight: 400;
     text-align: right;
 }
-
