@@ -1,14 +1,17 @@
-import React from "react";
-import Boton from "./Botones";
-import Pantalla from "./Pantalla";
-import Historial from "./Historial"
+import React from 'react';
+import Boton from './Botones';
+import Pantalla from './Pantalla';
+import Historial from './Historial'
 
 import '../StyleSheets/Calculadora.css';
 
-import { useState } from "react";
-import { evaluate, sqrt } from "mathjs";
-import { FiDelete } from "react-icons/fi";
-import imagenRaiz from "../Images/raizCuadrada.png";
+import { useState } from 'react';
+import { evaluate } from 'mathjs';
+import { FiDelete } from 'react-icons/fi';
+import imagenRaiz from '../Images/raiz-cuadrada.svg';
+import imgConversionNumero from '../Images/suma-resta.svg';
+import imgPotencia from '../Images/potencia.svg';
+import imgPi from '../Images/pi.svg';
 
 function Calculadora() {
     // Hooks
@@ -18,15 +21,10 @@ function Calculadora() {
     const [ultimoResultado, setUltimoResultado] = useState([])
 
     // RegExp: validacioness
-    const operadores = /[+\-%^*/]|[x÷√]|n!]/;
-    const operadorLog = /log\(/;
+    const operadores = /[+\-%^*/]|[x÷√!]/;
     const parentesisVacios = /\(\)|[\(\)]/;
-    const expresionValida = /^[0-9+\-*^%/]+$/.test(valorPantalla);
+    const expresionValida = /^[0-9+\-*/^()%x÷√!lnlog.]+$/.test(valorPantalla);
     const punto = /[.]/;
-
-    // Operaciones especiales
-    // const operacionRaiz = /√/.test(valorPantalla);
-    const pantallaHayLog = operadorLog.test(valorPantalla);
 
     // Validaciones
     const ultimoCaracter = valorPantalla.slice(-1);
@@ -38,105 +36,65 @@ function Calculadora() {
     // Mostrar en pantalla
     const mostrar = valor => {
         const valorIngresadoOperador = operadores.test(valor);
-        const valorIngresadoOperadorLog = operadorLog.test(valor);
         if (typeof valorPantalla === "string") {
-
-            if (valor === "xⁿ") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + '^');
-                } else { setValorPantalla(valorPantalla + '^') }
-
-
-            } else if (valor === "√") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else { setValorPantalla(valorPantalla + valor) }
-
-
-            } else if (valor === "÷") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else { setValorPantalla(valorPantalla + valor) }
-
-
-            } else if (valor === "x") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else { setValorPantalla(valorPantalla + valor) }
-
-
-            } else if (valor === "e") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else { setValorPantalla(valorPantalla + valor) }
-
-
-            } else if (valor === "π") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else { setValorPantalla(valorPantalla + valor) }
-
-                // Log
-            } else if (valor === "log(") {
-                if (pantallaHayLog && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.replace("log(", valor));
-                } else if (!pantallaHayLog && valorIngresadoOperadorLog) {
-                    setValorPantalla(valorPantalla + valor);
-                } else if (terminaEnOperador && valorIngresadoOperadorLog) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + valor);
-                } else if (pantallaHayLog && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -4) + valor);
-                } else if (pantallaHayLog && valorIngresadoOperadorLog) {
-                    setValorPantalla(valorPantalla.slice(0, -4) + valor);
-                } else {
-                    setValorPantalla(valorPantalla + valor);
-                }
+            if (terminaEnOperador && valorIngresadoOperador) {
+                setValorPantalla(valorPantalla.slice(0, -1) + valor)
+            } else {
+                setValorPantalla(valorPantalla + valor);
             }
-
-
-            else if (valor === "n!") {
-                if (terminaEnOperador && valorIngresadoOperador) {
-                    setValorPantalla(valorPantalla.slice(0, -1) + "!");
-                } else { setValorPantalla(valorPantalla + "!") }
-            }
-
-        } else if (terminaEnOperador && valorIngresadoOperador) {
-            setValorPantalla(valorPantalla.slice(0, -1) + valor);
-        } else {
-            setValorPantalla(valorPantalla + valor);
         }
-    }
-
+    };
 
     // Convierte simbolos especiales a operadores legibles por 'Math.js'
     const expresionConvertida = () => {
-        let valorConvertido = valorPantalla;
-        valorConvertido = valorConvertido.replace(/x/g, '*');
-        valorConvertido = valorConvertido.replace(/÷/g, '/');
-        return valorConvertido;
+        if (valorPantalla || expresionDentroParentesis.test(valorPantalla)) {
+            let valorConvertido = valorPantalla;
+
+            // ExpReg
+            const expRaiz = /√\(([^)]+)\)/g;
+            const expLog = /log\((-?\d+(\.\d+)?)\)/g;
+            const expLn = /ln\((-?\d+(\.\d+)?)\)/g;;
+
+            // Valores fijos
+            valorConvertido = valorConvertido.replace(/x/g, '*');
+            valorConvertido = valorConvertido.replace(/÷/g, '/');
+            valorConvertido = valorConvertido.replace(/π/g, Math.PI);
+            valorConvertido = valorConvertido.replace(/e/g, Math.E);
+
+            // Operaciones dinamicas
+            valorConvertido = valorConvertido.replace(expRaiz, (_, valor) => {
+                const resultadoRaiz = Math.sqrt(evaluate(valor));
+                return resultadoRaiz;
+            });
+            valorConvertido = valorConvertido.replace(expLog, (_, valor) => {
+                const resultadoLog = Math.log10(evaluate(valor));
+                return resultadoLog
+            });
+            valorConvertido = valorConvertido.replace(expLn, (_, valor) => {
+                const resultadoLn = Math.log(evaluate(valor));
+                return resultadoLn
+            });
+
+            return valorConvertido;
+        }
     };
 
     // Evaluar resultados
     const calcularResultado = () => {
-        // Si la pantalla no esta vacia, o hay una expresion dentro de parentesis, y es una expresion valida o con caracteres especiales
         if ((valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios))
             if (!terminaEnOperador && !terminaEnPunto) {
                 try {
-                    // if (operacionRaiz) {
-                    //     const expresionRaiz = "sqrt(16)";
-                    //     const resultadoRaiz = evaluate(valorPantalla + expresionRaiz)
-                    //     setValorPantalla(resultadoRaiz)
-                    // }
                     // Evaluo la expresion y lo convierto a String
                     const resultado = evaluate(expresionConvertida());
                     const resultadoString = resultado.toString();
 
                     // Muestro el resultado de la expresion
-                    setUltimoResultado(resultadoString);
                     setValorPantalla(resultadoString);
 
-                    // Historial
-                    // Suma 1 a N°
+                    // Almacena el ultimo resultado (ANS)
+                    setUltimoResultado(resultadoString);
+
+                    // Historial: Suma 1 a N°
                     const nOperacion = () => {
                         setNumeroOperacion(() => numeroOperacion + 1)
                         return numeroOperacion
@@ -144,16 +102,17 @@ function Calculadora() {
 
                     // Pasa argumentos al objeto 'nuevoRegistro' 
                     guardarEnHistorial(nOperacion(), valorPantalla, resultadoString);
+
                 } catch {
                     setValorPantalla('Error');
-                    alert("Expresión no válida");
+                    alert('Expresión no válida');
                 }
             }
             else {
                 setValorPantalla('Error')
             }
         else {
-            alert("Ingrese una expresión")
+            alert('Ingrese una expresión')
         }
     };
 
@@ -177,6 +136,20 @@ function Calculadora() {
         // Recorre el array 'historial' y añade un nuevo registro al final
         setHistorial([...historial, nuevoRegistro]);
     };
+
+    // Convierte numeros Positivos a Negativos (viceversa)
+    const convertirTipoNumero = () => {
+        const primerCaracter = valorPantalla.slice(0, 1);
+        const haySimboloMenos = /-/.test(primerCaracter);
+
+        if (valorPantalla && !haySimboloMenos && !terminaEnOperador && !terminaEnPunto) {
+            setValorPantalla('-' + valorPantalla)
+        } else if (haySimboloMenos) {
+            setValorPantalla(valorPantalla.replace('-', ''))
+        } else if (terminaEnOperador || terminaEnPunto) {
+            return
+        } else { setValorPantalla(valorPantalla) }
+    }
 
     // Keyboard
     onkeydown = eventKey => {
@@ -219,23 +192,27 @@ function Calculadora() {
     return (
 
         // Componente Calculadora
-        <div className="calculadora">
+        <div className='calculadora'>
             <Pantalla input={valorPantalla} manejarEnvio={calcularResultado} />
             <div className='filas'>
-                <Boton accionClick={mostrar}>n!</Boton>
-                <Boton accionClick={() => mostrar("log(")}>log</Boton>
+                <Boton accionClick={() => mostrar('ln(')}>ln</Boton>
+                <Boton accionClick={() => mostrar('log(')}>log</Boton>
                 <Boton accionClick={borrarUnValor}>
                     <FiDelete></FiDelete>
                 </Boton>
                 <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
             </div>
             <div className='filas'>
-                <Boton accionClick={mostrar}>π</Boton>
-                <Boton accionClick={mostrar}>e</Boton>
-                <Boton accionClick={() => mostrar("√")}>
-                    <img className="img-raiz" src={imagenRaiz} alt="raiz cuadrada" />
+                <Boton accionClick={() => mostrar('π')}>
+                    <img className='img-pi' src={imgPi} alt="Simbolo PI" />
                 </Boton>
-                <Boton accionClick={mostrar}>xⁿ</Boton>
+                <Boton accionClick={mostrar}>e</Boton>
+                <Boton accionClick={() => mostrar('√(')}>
+                    <img className='img-raiz' src={imagenRaiz} alt='Raiz cuadrada' />
+                </Boton>
+                <Boton accionClick={() => mostrar('^')}>
+                    <img className='img-potencia' src={imgPotencia} alt="Simbolo potencia" />
+                </Boton>
             </div>
             <div className='filas'>
                 <Boton accionClick={mostrar}>(</Boton>
@@ -262,7 +239,9 @@ function Calculadora() {
                 <Boton accionClick={mostrar}>+</Boton>
             </div>
             <div className='filas'>
-                <Boton accionClick={mostrar}>+/-</Boton>
+                <Boton accionClick={convertirTipoNumero}>
+                    <img className="img-conversion-num" src={imgConversionNumero} alt="positivo-negativo" />
+                </Boton>
                 <Boton accionClick={mostrar}>0</Boton>
                 <Boton accionClick={mostrar}>,</Boton>
                 <Boton accionClick={calcularResultado}>=</Boton>
@@ -287,8 +266,4 @@ export default Calculadora
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
 
-//    <Boton accionClick={mostrar}>÷</Boton>
-//    <Boton accionClick={recuperarUltimoResultado}>ANS</Boton>
-//    <Boton accionClick={mostrar}>xⁿ</Boton>
-//    <Boton accionClick={borrarUnValor}>DEL</Boton>
-//    <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
+// expresionValidaExtendida = /^[0-9+\-*^%/x÷√!]*(\blog\b|log\()?[0-9+\-*^%/x÷√!]*$/.test(valorPantalla);

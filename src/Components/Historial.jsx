@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 import '../StyleSheets/Historial.css';
-import { AiOutlineCloseCircle } from "react-icons/ai";
-import { v4 as uuidv4 } from "uuid";
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { v4 as uuidv4 } from 'uuid';
 
 function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacion, setValorPantalla }) {
     const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -36,24 +36,24 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
     ))
 
     return (
-        <div className="contenedor-historial">
-            <div className="registro-historial">
-                <div className="registro-titulo-contenedor">
-                    <h2 className="registro-titulo">Registro de operaciones</h2>
+        <div className='contenedor-historial'>
+            <div className='registro-historial'>
+                <div className='registro-titulo-contenedor'>
+                    <h2 className='registro-titulo'>Registro de operaciones</h2>
                 </div>
-                <button className="registro-reiniciar" onClick={() => reiniciarRegistro()}>Borrar Historial</button>
+                <button className='registro-reiniciar' onClick={() => reiniciarRegistro()}>Borrar Historial</button>
 
                 {historial.map((registro) => (
-                    <div className="registro-estructura" key={registro.id} >
-                        <div className="registro-opciones-contenedor">
-                            <p className="registro-fecha">{fecha}</p>
-                            <AiOutlineCloseCircle className="registro-opciones-eliminar" onClick={() => eliminarRegistro(registro.id)} />
+                    <div className='registro-estructura' key={registro.id} >
+                        <div className='registro-opciones-contenedor'>
+                            <p className='registro-fecha'>{fecha}</p>
+                            <AiOutlineCloseCircle className='registro-opciones-eliminar' onClick={() => eliminarRegistro(registro.id)} />
                         </div>
-                        <hr className="registro-divisor" />
-                        <p className="registro-hora">{hora}</p>
-                        <h4 className="registro-numero">N° {registro.numeroOperacion}</h4>
-                        <p className="registro-expresion" onClick={() => recuperarExpresion(registro.expresion)}><span>Exp:</span> {registro.expresion} </p>
-                        <p className="registro-resultado" onClick={() => recuperarResultado(registro.resultado)}><span>Res:</span> {registro.resultado}</p>
+                        <hr className='registro-divisor' />
+                        <p className='registro-hora'>{hora}</p>
+                        <h4 className='registro-numero'>N° {registro.numeroOperacion}</h4>
+                        <p className='registro-expresion' onClick={() => recuperarExpresion(registro.expresion)}><span>Exp:</span> {registro.expresion} </p>
+                        <p className='registro-resultado' onClick={() => recuperarResultado(registro.resultado)}><span>Res:</span> {registro.resultado}</p>
                     </div>
                 ))}
             </div>

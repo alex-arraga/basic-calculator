@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import '../StyleSheets/Pantalla.css';
 
 const Pantalla = ({ input }) => {
@@ -8,10 +8,10 @@ const Pantalla = ({ input }) => {
     };
 
     return (
-        <form className="formulario-pantalla" onSubmit={manejarEnvio}>
-            <input className="pantalla"
-                placeholder="0"
-                type="text"
+        <form className='formulario-pantalla' onSubmit={manejarEnvio}>
+            <input className='pantalla'
+                placeholder='0'
+                type='text'
                 readOnly
                 value={input}>
             </input>

@@ -16,7 +16,15 @@
     margin: 3px 25px;
 }
 
-.img-raiz {
-    filter: invert(90%);
+
+.img-raiz,
+.img-conversion-num {
+    filter: invert(100%);
     width: 30px;
+}
+
+.img-pi,
+.img-potencia {
+    filter: invert(100%);
+    width: 20px;
 }
