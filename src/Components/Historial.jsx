@@ -31,7 +31,7 @@ function Historial({ historial, setHistorial, numeroOperacion, setNumeroOperacio
         <div key={registro.id = uuidv4()}>
             <p>{registro.numeroOperacion}</p>
             <p>{registro.expresion}</p>
-            <p>{registro.resultado}</p>
+            <p>{registro.resultado.replace('.', ',')}</p>
         </div>
     ))
 

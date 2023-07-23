@@ -1,17 +1,16 @@
 import React from 'react';
+import '../StyleSheets/Calculadora.css';
+
 import Boton from './Botones';
 import Pantalla from './Pantalla';
 import Historial from './Historial'
 
-import '../StyleSheets/Calculadora.css';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { evaluate } from 'mathjs';
 import { FiDelete } from 'react-icons/fi';
 import imagenRaiz from '../Images/raiz-cuadrada.svg';
-import imgConversionNumero from '../Images/suma-resta.svg';
+import imgConversionNumero from '../Images/positivo-negativo.svg';
 import imgPotencia from '../Images/potencia.svg';
-import imgPi from '../Images/pi.svg';
 
 function Calculadora() {
     // Hooks
@@ -20,18 +19,37 @@ function Calculadora() {
     const [numeroOperacion, setNumeroOperacion] = useState(1);
     const [ultimoResultado, setUltimoResultado] = useState([])
 
-    // RegExp: validacioness
-    const operadores = /[+\-%^*/]|[x÷√!]/;
+    // RegExp: validaciones
+    const operadores = /[+\-%^*,/]|[x÷√!]/;
     const parentesisVacios = /\(\)|[\(\)]/;
-    const expresionValida = /^[0-9+\-*/^()%x÷√!lnlog.]+$/.test(valorPantalla);
-    const punto = /[.]/;
+    const expresionValida = /^[0-9+\-*/^()%x÷√!lnlog,]+$/.test(valorPantalla);
+    const coma = /[,]/;
 
     // Validaciones
     const ultimoCaracter = valorPantalla.slice(-1);
     const expresionDentroParentesis = parentesisVacios.test(valorPantalla.slice(1, -1));
     const contieneParentesisVacios = parentesisVacios.test(valorPantalla);
     const terminaEnOperador = operadores.test(ultimoCaracter);
-    const terminaEnPunto = punto.test(ultimoCaracter);
+    const terminaEnComa = coma.test(ultimoCaracter);
+
+
+    // Agrega '.' cada 3 numeros
+    useEffect(() => {
+        // ExpReg para agregar puntos cada tres dígitos
+        const colocarPuntos = /\B(?=(\d{3})+(?!\d))/g;
+        const pantallaFormateada = valorPantalla
+
+            // Elimina los puntos existentes antes de hacer el proximo reemplazo
+            .replace(/\./g, '')
+            // Agrega los puntos siempre que la condicion se cumpla
+            .replace(colocarPuntos, '.');
+
+        // Actualizar el estado solo si es necesario (evitar bucle infinito)
+        if (pantallaFormateada !== valorPantalla) {
+            setValorPantalla(pantallaFormateada);
+        }
+    }, [valorPantalla]);
+
 
     // Mostrar en pantalla
     const mostrar = valor => {
@@ -45,7 +63,8 @@ function Calculadora() {
         }
     };
 
-    // Convierte simbolos especiales a operadores legibles por 'Math.js'
+
+    // Convierte simbolos especiales a operadores legibles por 'Math.js', asi puede evaluar el resultado
     const expresionConvertida = () => {
         if (valorPantalla || expresionDentroParentesis.test(valorPantalla)) {
             let valorConvertido = valorPantalla;
@@ -56,9 +75,11 @@ function Calculadora() {
             const expLn = /ln\((-?\d+(\.\d+)?)\)/g;;
 
             // Valores fijos
+            valorConvertido = valorConvertido.replace(/\./g, '');
+            valorConvertido = valorConvertido.replace(/,/g, '.');
             valorConvertido = valorConvertido.replace(/x/g, '*');
             valorConvertido = valorConvertido.replace(/÷/g, '/');
-            valorConvertido = valorConvertido.replace(/π/g, Math.PI);
+            valorConvertido = valorConvertido.replace(/𝜋/g, Math.PI);
             valorConvertido = valorConvertido.replace(/e/g, Math.E);
 
             // Operaciones dinamicas
@@ -79,30 +100,46 @@ function Calculadora() {
         }
     };
 
+
     // Evaluar resultados
     const calcularResultado = () => {
         if ((valorPantalla || expresionDentroParentesis && expresionValida && !contieneParentesisVacios))
-            if (!terminaEnOperador && !terminaEnPunto) {
+            if (!terminaEnOperador && !terminaEnComa) {
                 try {
-                    // Evaluo la expresion y lo convierto a String
-                    const resultado = evaluate(expresionConvertida());
-                    const resultadoString = resultado.toString();
-
-                    // Muestro el resultado de la expresion
-                    setValorPantalla(resultadoString);
-
-                    // Almacena el ultimo resultado (ANS)
-                    setUltimoResultado(resultadoString);
-
                     // Historial: Suma 1 a N°
                     const nOperacion = () => {
-                        setNumeroOperacion(() => numeroOperacion + 1)
+                        setNumeroOperacion(() => numeroOperacion + 1);
                         return numeroOperacion
                     };
 
-                    // Pasa argumentos al objeto 'nuevoRegistro' 
-                    guardarEnHistorial(nOperacion(), valorPantalla, resultadoString);
+                    const resultado = evaluate(expresionConvertida());
+                    const redondearDecimales = resultado.toFixed(1);
+                    const resultadoString = redondearDecimales.toString();
 
+                    const resultadoFormateado = resultadoString.replace('.', ',');
+                    const eliminarCeroFinal = /,0$/.test(resultadoFormateado);
+                    const resFinal = resultadoFormateado;
+
+                    if (eliminarCeroFinal) {
+                        // Si termina en ',0' lo elimina y redondea
+                        const resFinalDecimal = resFinal.slice(0, -2);
+
+                        // Muestro el resultado de la expresion
+                        setValorPantalla(resFinalDecimal);
+
+                        // Almacena el ultimo resultado (ANS)
+                        setUltimoResultado(resFinalDecimal);
+                        // Pasa argumentos al objeto 'nuevoRegistro'
+                        guardarEnHistorial(nOperacion(), valorPantalla, resFinalDecimal);
+                    } else {
+                        // Muestro el resultado de la expresion
+                        setValorPantalla(resFinal);
+
+                        // Almacena el ultimo resultado (ANS)
+                        setUltimoResultado(resFinal);
+                        // Pasa argumentos al objeto 'nuevoRegistro'
+                        guardarEnHistorial(nOperacion(), valorPantalla, resFinal);
+                    }
                 } catch {
                     setValorPantalla('Error');
                     alert('Expresión no válida');
@@ -116,15 +153,6 @@ function Calculadora() {
         }
     };
 
-    // Teclas especiales 'Backspace' y 'r'
-    const borrarUnValor = () => {
-        setValorPantalla(() => valorPantalla.slice(0, -1))
-    }
-
-    // Ultimo Resultado
-    const recuperarUltimoResultado = () => {
-        setValorPantalla(valorPantalla + ultimoResultado)
-    };
 
     // Almacena una lista de objetos como registros en Historial
     const guardarEnHistorial = (numeroOperacion, expresion, resultado) => {
@@ -137,19 +165,33 @@ function Calculadora() {
         setHistorial([...historial, nuevoRegistro]);
     };
 
+
+    // Teclas especiales 'Backspace' y 'r'
+    const borrarUnValor = () => {
+        setValorPantalla(() => valorPantalla.slice(0, -1))
+    }
+
+
+    // Ultimo Resultado 'ANS'
+    const recuperarUltimoResultado = () => {
+        setValorPantalla(valorPantalla + ultimoResultado)
+    };
+
+
     // Convierte numeros Positivos a Negativos (viceversa)
     const convertirTipoNumero = () => {
         const primerCaracter = valorPantalla.slice(0, 1);
         const haySimboloMenos = /-/.test(primerCaracter);
 
-        if (valorPantalla && !haySimboloMenos && !terminaEnOperador && !terminaEnPunto) {
+        if (valorPantalla && !haySimboloMenos && !terminaEnOperador && !terminaEnComa) {
             setValorPantalla('-' + valorPantalla)
         } else if (haySimboloMenos) {
             setValorPantalla(valorPantalla.replace('-', ''))
-        } else if (terminaEnOperador || terminaEnPunto) {
+        } else if (terminaEnOperador || terminaEnComa) {
             return
         } else { setValorPantalla(valorPantalla) }
     }
+
 
     // Keyboard
     onkeydown = eventKey => {
@@ -163,7 +205,7 @@ function Calculadora() {
                 case ')':
                 case '+':
                 case '-':
-                case '.':
+                case ',':
                 case '%':
                 case '^':
                     mostrar(tecla)
@@ -189,8 +231,9 @@ function Calculadora() {
             }
         }
     };
-    return (
 
+
+    return (
         // Componente Calculadora
         <div className='calculadora'>
             <Pantalla input={valorPantalla} manejarEnvio={calcularResultado} />
@@ -203,15 +246,13 @@ function Calculadora() {
                 <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
             </div>
             <div className='filas'>
-                <Boton accionClick={() => mostrar('π')}>
-                    <img className='img-pi' src={imgPi} alt="Simbolo PI" />
-                </Boton>
+                <Boton accionClick={mostrar}>𝜋</Boton>
                 <Boton accionClick={mostrar}>e</Boton>
                 <Boton accionClick={() => mostrar('√(')}>
                     <img className='img-raiz' src={imagenRaiz} alt='Raiz cuadrada' />
                 </Boton>
                 <Boton accionClick={() => mostrar('^')}>
-                    <img className='img-potencia' src={imgPotencia} alt="Simbolo potencia" />
+                    <img className="img-potencia" src={imgPotencia} alt="potencia" />
                 </Boton>
             </div>
             <div className='filas'>
@@ -265,5 +306,3 @@ export default Calculadora
 
 // Comprobar info teclas:
 // onkeydown = eventKey => console.log(eventKey)
-
-// expresionValidaExtendida = /^[0-9+\-*^%/x÷√!]*(\blog\b|log\()?[0-9+\-*^%/x÷√!]*$/.test(valorPantalla);
