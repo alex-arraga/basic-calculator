@@ -1,12 +1,12 @@
 .contenedor-simbolo {
     display: flex;
-    margin: 3px 6px;
-    width: 85px;
-    height: 55px;
+    margin: 4px 8px;
+    width: 80px;
+    height: 50px;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    font-size: 1.5em;
+    font-size: 1.3em;
     cursor: pointer;
 }
 

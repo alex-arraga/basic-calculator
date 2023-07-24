@@ -3,9 +3,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 450px;
-    height: 670px;
-    background-color: rgba(0, 0, 0, 0.55);
+    width: 435px;
+    height: 720px;
+    background-color: rgba(0, 0, 0, 0.8);
     border-radius: 20px;
 }
 
@@ -13,14 +13,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 3px 25px;
+    margin: 4px 0;
 }
 
-
-.img-raiz,
-.img-conversion-num {
+.img-raiz {
     filter: invert(100%);
     width: 30px;
+}
+
+.img-conversion-num {
+    filter: invert(100%);
+    width: 23px;
 }
 
 .img-potencia {

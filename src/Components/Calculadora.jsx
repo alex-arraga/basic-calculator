@@ -38,7 +38,6 @@ function Calculadora() {
         // ExpReg para agregar puntos cada tres dígitos
         const colocarPuntos = /\B(?=(\d{3})+(?!\d))/g;
         const pantallaFormateada = valorPantalla
-
             // Elimina los puntos existentes antes de hacer el proximo reemplazo
             .replace(/\./g, '')
             // Agrega los puntos siempre que la condicion se cumpla
@@ -46,7 +45,9 @@ function Calculadora() {
 
         // Actualizar el estado solo si es necesario (evitar bucle infinito)
         if (pantallaFormateada !== valorPantalla) {
-            setValorPantalla(pantallaFormateada);
+            if ((!/,\d{3,}/.test(valorPantalla))) {
+                setValorPantalla(pantallaFormateada);
+            }
         }
     }, [valorPantalla]);
 
@@ -72,7 +73,10 @@ function Calculadora() {
             // ExpReg
             const expRaiz = /√\(([^)]+)\)/g;
             const expLog = /log\((-?\d+(\.\d+)?)\)/g;
-            const expLn = /ln\((-?\d+(\.\d+)?)\)/g;;
+            const expLn = /ln\((-?\d+(\.\d+)?)\)/g;
+            const expTan = /tan\((-?\d+(\.\d+)?)\)/g;
+            const expCos = /cos\((-?\d+(\.\d+)?)\)/g;
+            const expSen = /sin\((-?\d+(\.\d+)?)\)/g;
 
             // Valores fijos
             valorConvertido = valorConvertido.replace(/\./g, '');
@@ -87,13 +91,30 @@ function Calculadora() {
                 const resultadoRaiz = Math.sqrt(evaluate(valor));
                 return resultadoRaiz;
             });
+
             valorConvertido = valorConvertido.replace(expLog, (_, valor) => {
                 const resultadoLog = Math.log10(evaluate(valor));
                 return resultadoLog
             });
+
             valorConvertido = valorConvertido.replace(expLn, (_, valor) => {
                 const resultadoLn = Math.log(evaluate(valor));
                 return resultadoLn
+            });
+
+            valorConvertido = valorConvertido.replace(expTan, (_, valor) => {
+                const resultadoTan = Math.tan(evaluate(valor));
+                return resultadoTan
+            });
+
+            valorConvertido = valorConvertido.replace(expCos, (_, valor) => {
+                const resultadoCos = Math.cos(evaluate(valor));
+                return resultadoCos
+            });
+
+            valorConvertido = valorConvertido.replace(expSen, (_, valor) => {
+                const resultadoSen = Math.sin(evaluate(valor));
+                return resultadoSen
             });
 
             return valorConvertido;
@@ -113,8 +134,11 @@ function Calculadora() {
                     };
 
                     const resultado = evaluate(expresionConvertida());
-                    const redondearDecimales = resultado.toFixed(1);
-                    const resultadoString = redondearDecimales.toString();
+                    // const redondearDecimales = resultado.toFixed(1);
+                    // const resultadoString = redondearDecimales.toString();
+
+                    // No redondea decimales
+                    const resultadoString = resultado.toString();
 
                     const resultadoFormateado = resultadoString.replace('.', ',');
                     const eliminarCeroFinal = /,0$/.test(resultadoFormateado);
@@ -169,6 +193,9 @@ function Calculadora() {
     // Teclas especiales 'Backspace' y 'r'
     const borrarUnValor = () => {
         setValorPantalla(() => valorPantalla.slice(0, -1))
+        if (valorPantalla == 'Error') {
+            setValorPantalla('')
+        }
     }
 
 
@@ -244,6 +271,12 @@ function Calculadora() {
                     <FiDelete></FiDelete>
                 </Boton>
                 <Boton accionClick={() => setValorPantalla('')}>AC</Boton>
+            </div>
+            <div className='filas'>
+                <Boton accionClick={() => mostrar('cos(')}>cos</Boton>
+                <Boton accionClick={() => mostrar('sin(')}>sin</Boton>
+                <Boton accionClick={() => mostrar('tan(')}>tan</Boton>
+                <Boton accionClick={() => recuperarUltimoResultado()}>ANS</Boton>
             </div>
             <div className='filas'>
                 <Boton accionClick={mostrar}>𝜋</Boton>
