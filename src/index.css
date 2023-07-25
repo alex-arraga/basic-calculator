@@ -5,7 +5,7 @@
   --color-letra: #1a1a1a;
   --tipo-principal: 'Poppins', sans-serif;
   --tipo-secundaria: 'Verdana';
-  --fondo: #e4e4e4;
+  --fondo: #dbdbdb;
 }
 
 /* Reseteamos los margin y paddings de todas las etiquetas */
@@ -18,7 +18,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fondo: #0b0b0b;
+    --fondo: #202020;
     --color-letra: #f7f7f7;
   }
 }

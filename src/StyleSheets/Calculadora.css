@@ -5,8 +5,49 @@
     align-items: center;
     width: 435px;
     height: 720px;
-    background-color: rgba(0, 0, 0, 0.8);
     border-radius: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .calculadora {
+        background-color: rgba(0, 0, 0, 0.8);
+        border: 2px solid rgba(95, 95, 95, 0.7);
+    }
+
+    .img-raiz {
+        filter: invert(100%);
+        width: 30px;
+    }
+
+    .img-conversion-num {
+        filter: invert(100%);
+        width: 23px;
+    }
+
+    .img-potencia {
+        filter: invert(100%);
+        width: 20px;
+    }
+}
+
+
+@media (prefers-color-scheme: light) {
+    .calculadora {
+        background-color: #eaeaea;
+        border: 2px solid rgba(26, 26, 26, .7);
+    }
+
+    .img-raiz {
+        width: 30px;
+    }
+
+    .img-conversion-num {
+        width: 23px;
+    }
+
+    .img-potencia {
+        width: 20px;
+    }
 }
 
 .filas {
@@ -14,19 +55,4 @@
     align-items: center;
     justify-content: center;
     margin: 4px 0;
-}
-
-.img-raiz {
-    filter: invert(100%);
-    width: 30px;
-}
-
-.img-conversion-num {
-    filter: invert(100%);
-    width: 23px;
-}
-
-.img-potencia {
-    filter: invert(100%);
-    width: 20px;
 }

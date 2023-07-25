@@ -1,7 +1,6 @@
 .contenedor-historial {
     width: 350px;
     height: 100vh;
-    background-color: rgb(15, 15, 15);
     position: absolute;
     left: 0;
     top: 0;
@@ -11,19 +10,16 @@
 
 .contenedor-historial::-webkit-scrollbar {
     width: 5px;
-    background-color: rgb(46, 46, 46);
 }
 
 .contenedor-historial::-webkit-scrollbar-thumb {
     height: auto;
     width: 5px;
-    background-color: rgb(122, 122, 122);
     border-radius: 7px;
 }
 
 .registro-titulo-contenedor {
     display: flex;
-    background-color: rgba(0, 53, 50, .7);
     height: 60px;
     justify-content: center;
     align-items: center;
@@ -40,10 +36,8 @@
 }
 
 .registro-reiniciar {
-    background-color: rgb(54, 54, 54);
     margin: 0 auto;
     font-weight: 400;
-    color: #e3e3e3;
     margin-bottom: 25px;
     padding: 5px 95px;
     border-radius: 5px;
@@ -53,7 +47,6 @@
 }
 
 .registro-reiniciar:hover {
-    background-color: rgb(0, 78, 72);
     transition: .4s;
 }
 
@@ -65,19 +58,10 @@
     border-radius: 5px;
 }
 
-.registro-estructura:nth-child(2n + 1) {
-    background-color: rgb(35, 35, 35);
-}
-
-.registro-estructura:nth-child(2n + 2) {
-    background-color: rgb(42, 42, 42);
-}
-
 .registro-numero,
 .registro-expresion,
 .registro-resultado {
     font-size: 13px;
-    color: #c5c5c5;
 }
 
 .registro-expresion,
@@ -86,17 +70,11 @@
     overflow: hidden;
 }
 
-.registro-expresion span,
-.registro-resultado span {
-    color: #fff
-}
-
 .registro-expresion span:hover,
 .registro-resultado span:hover {
     cursor: pointer;
     transition: .4s;
     text-decoration: underline;
-    color: rgb(126, 246, 236);
 }
 
 .registro-opciones-contenedor {
@@ -112,11 +90,9 @@
 .registro-opciones-eliminar {
     width: auto;
     cursor: pointer;
-    color: rgb(255, 145, 145);
 }
 
 .registro-opciones-eliminar:hover {
-    color: rgb(255, 76, 76);
     transition: .3s;
 }
 
@@ -124,7 +100,6 @@
     margin: 10px auto;
     width: 100%;
     height: 1.5px;
-    background-color: rgba(247, 247, 247, .2);
     border-radius: 5px;
 }
 
@@ -132,4 +107,139 @@
     font-size: 11px;
     position: absolute;
     right: 15px;
+}
+
+
+
+
+@media (prefers-color-scheme: dark) {
+    .contenedor-historial {
+        background-color: rgb(15, 15, 15);
+    }
+
+    .contenedor-historial::-webkit-scrollbar {
+        background-color: rgb(46, 46, 46);
+    }
+
+    .contenedor-historial::-webkit-scrollbar-thumb {
+        background-color: rgb(122, 122, 122);
+    }
+
+    .registro-titulo-contenedor {
+        background-color: rgba(0, 53, 50, .7);
+    }
+
+    .registro-reiniciar {
+        background-color: rgb(54, 54, 54);
+        color: #e3e3e3;
+    }
+
+    .registro-reiniciar:hover {
+        background-color: rgb(0, 78, 72);
+    }
+
+    .registro-estructura:nth-child(2n + 1) {
+        background-color: rgb(35, 35, 35);
+    }
+
+    .registro-estructura:nth-child(2n + 2) {
+        background-color: rgb(42, 42, 42);
+    }
+
+    .registro-numero,
+    .registro-expresion,
+    .registro-resultado {
+        color: #c5c5c5;
+    }
+
+    .registro-expresion span,
+    .registro-resultado span {
+        color: #fff
+    }
+
+    .registro-expresion span:hover,
+    .registro-resultado span:hover {
+        color: rgb(126, 246, 236);
+    }
+
+    .registro-divisor {
+        background-color: rgba(247, 247, 247, .2);
+    }
+
+    .registro-opciones-eliminar {
+        color: rgb(255, 145, 145);
+    }
+
+    .registro-opciones-eliminar:hover {
+        color: rgb(255, 76, 76);
+    }
+}
+
+
+
+/* Light */
+
+
+
+@media (prefers-color-scheme: light) {
+    .contenedor-historial {
+        background-color: #f7f7f7;
+    }
+
+    .contenedor-historial::-webkit-scrollbar {
+        background-color: rgb(165, 165, 165);
+    }
+
+    .contenedor-historial::-webkit-scrollbar-thumb {
+        background-color: rgb(90, 90, 90);
+    }
+
+    .registro-titulo-contenedor {
+        background-color: rgba(29, 162, 151, 0.7);
+    }
+
+    .registro-reiniciar {
+        background-color: rgb(200, 200, 200);
+        color: #1a1a1a;
+    }
+
+    .registro-reiniciar:hover {
+        background-color: rgb(176, 176, 176);
+    }
+
+    .registro-estructura:nth-child(2n + 1) {
+        background-color: rgb(220, 220, 220);
+    }
+
+    .registro-estructura:nth-child(2n + 2) {
+        background-color: rgb(230, 230, 230);
+    }
+
+    .registro-numero,
+    .registro-expresion,
+    .registro-resultado {
+        color: #1a1a1a;
+    }
+
+    .registro-expresion span,
+    .registro-resultado span {
+        color: #1a1a1a
+    }
+
+    .registro-expresion span:hover,
+    .registro-resultado span:hover {
+        color: rgb(0, 169, 174);
+    }
+
+    .registro-divisor {
+        background-color: rgba(40, 40, 40, 0.2);
+    }
+
+    .registro-opciones-eliminar {
+        color: rgb(255, 108, 108);
+    }
+
+    .registro-opciones-eliminar:hover {
+        color: rgb(255, 0, 0);
+    }
 }

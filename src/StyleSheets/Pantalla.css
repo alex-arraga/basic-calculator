@@ -5,14 +5,27 @@
     padding: 0 10px;
     height: 80px;
     width: 380px;
-    background-color: #0a0a0a;
-    border: 2px solid rgb(60, 60, 60);
     border-radius: 10px;
     margin: 20px 0px;
     font-size: 2.2em;
-    color: #ffffff;
     overflow: overlay;
     letter-spacing: 1px;
     font-weight: 400;
     text-align: right;
+}
+
+@media (prefers-color-scheme: dark) {
+    .pantalla {
+        background-color: #0a0a0a;
+        color: #ffffff;
+        border: 2px solid rgb(60, 60, 60);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .pantalla {
+        background-color: #f7f7f7;
+        color: #1a1a1a;
+        border: 2px solid rgb(129, 129, 129, .7);
+    }
 }

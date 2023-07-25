@@ -10,18 +10,42 @@
     cursor: pointer;
 }
 
-.contenedor-simbolo.operador {
-    background-color: rgb(60, 60, 60);
+@media(prefers-color-scheme: dark) {
+    .contenedor-simbolo.operador {
+        background-color: rgb(60, 60, 60);
+    }
+
+    .contenedor-simbolo.operador:hover,
+    .contenedor-simbolo.operador:active {
+        background-color: rgb(112, 133, 133);
+    }
+
+    .contenedor-simbolo.numeros {
+        background-color: rgb(0, 144, 137);
+    }
+
+    .contenedor-simbolo.numeros:hover,
+    .contenedor-simbolo.numeros:active {
+        background-color: rgb(0, 181, 172);
+    }
 }
 
-.contenedor-simbolo.operador:hover {
-    background-color: rgb(112, 133, 133);
-}
+@media (prefers-color-scheme: light) {
+    .contenedor-simbolo.operador {
+        background-color: #c1c1c1;
+    }
 
-.contenedor-simbolo.numeros {
-    background-color: rgb(0, 144, 137);
-}
+    .contenedor-simbolo.operador:hover,
+    .contenedor-simbolo.operador:active {
+        background-color: rgb(150, 150, 150);
+    }
 
-.contenedor-simbolo.numeros:hover {
-    background-color: rgb(0, 181, 172);
+    .contenedor-simbolo.numeros {
+        background-color: #23d0bc;
+    }
+
+    .contenedor-simbolo.numeros:hover,
+    .contenedor-simbolo.numeros:active {
+        background-color: #36ac9f;
+    }
 }
